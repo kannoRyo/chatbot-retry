@@ -4,7 +4,8 @@ import DefaultDataset from './dataset'
 
 import {
   Chats,
-  Answers
+  Answers,
+  FormDialog
 } from './components/index'
 
 export default class App extends React.Component {
@@ -20,6 +21,7 @@ export default class App extends React.Component {
     }
 
     this.selectAnswer = this.selectAnswer.bind(this)
+    this.handleToogle = this.handleToogle.bind(this)
   }
 
   displayNextQuestion(nextQuestionId){
@@ -50,6 +52,10 @@ export default class App extends React.Component {
         a.click()
         this.displayNextQuestion('init')
         break
+      case (nextQuestionId) === 'contact':
+        this.handleToogle()
+        this.displayNextQuestion('init')
+        break;
       default:
         const chats = this.state.chats
         chats.push({
@@ -65,6 +71,13 @@ export default class App extends React.Component {
         }, 500);
         break;
     }
+  }
+
+  handleToogle(){
+    open = !(this.state.open)
+    this.setState({
+      open: open
+    })
   }
 
   componentDidMount(){
@@ -84,6 +97,7 @@ export default class App extends React.Component {
         <div className="c-box">
           <Chats chats={this.state.chats}/>
           <Answers answers={this.state.answers} selectAnswer={this.selectAnswer}/>
+          <FormDialog handleToogle={this.handleToogle} open={this.state.open}/>
         </div>
       </section>
     );
