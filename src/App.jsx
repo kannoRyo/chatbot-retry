@@ -43,6 +43,13 @@ export default class App extends React.Component {
       case (nextQuestionId) === 'init' :
         this.displayNextQuestion(nextQuestionId)
         break
+      case (/^https:*/.test(nextQuestionId)) :
+        const a = document.createElement('a')
+        a.href = nextQuestionId
+        a.target = '_blank'
+        a.click()
+        this.displayNextQuestion('init')
+        break
       default:
         const chats = this.state.chats
         chats.push({
@@ -53,8 +60,10 @@ export default class App extends React.Component {
           chats: chats
         })
 
-        this.displayNextQuestion(nextQuestionId)
-        break
+        setTimeout(() => {
+          this.displayNextQuestion(nextQuestionId)
+        }, 500);
+        break;
     }
   }
 
