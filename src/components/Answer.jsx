@@ -18,7 +18,7 @@ const useStyles = makeStyles({
 const Answer = (props) =>{
     const classes = useStyles()
     return(
-    <Button variant="outlined" className={classes.button}>{props.content}</Button>
+      <Button variant="outlined" onClick={()=>props.selectAnswer(props.content,props.nextId)} className={classes.button}>{props.content}</Button>
     )
 }
 

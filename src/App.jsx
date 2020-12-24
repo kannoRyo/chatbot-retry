@@ -2,7 +2,10 @@ import React from 'react'
 import './assets/styles/style.css'
 import DefaultDataset from './dataset'
 
-import {Answers} from './components/index'
+import {
+  Chats,
+  Answers
+} from './components/index'
 
 export default class App extends React.Component {
   constructor(props){
@@ -15,23 +18,54 @@ export default class App extends React.Component {
       dataset:DefaultDataset,
       open: false
     }
+
+    this.selectAnswer = this.selectAnswer.bind(this)
   }
 
-  initAnswer(){
-    const answers = this.state.answers
-    const datasetAnswer = this.state.dataset[this.state.currentId].answers
+  displayNextQuestion(nextQuestionId){
+    const chats = this.state.chats
+    const dataset = this.state.dataset[nextQuestionId]
 
-    answers.push(...datasetAnswer)
-
-    console.log(answers)
-    this.setState({
-      answers: answers
+    chats.push({
+      text:dataset.question,
+      type:'question'
     })
 
+    this.setState({
+      answers: dataset.answers,
+      chats: chats,
+      currentId: nextQuestionId
+    })
+  }
+
+  selectAnswer(selectedAnswer, nextQuestionId){
+    switch(true){
+      case (nextQuestionId) === 'init' :
+        this.displayNextQuestion(nextQuestionId)
+        break
+      default:
+        const chats = this.state.chats
+        chats.push({
+          text: selectedAnswer,
+          type: 'answer'
+        })
+        this.setState({
+          chats: chats
+        })
+
+        this.displayNextQuestion(nextQuestionId)
+        break
+    }
   }
 
   componentDidMount(){
-    this.initAnswer()
+    const initAnswer= ''
+    this.selectAnswer(initAnswer,'init')
+  }
+
+  componentDidUpdate(){
+    const scrollArea = document.getElementById('scroll-area')
+    scrollArea.scrollTop = scrollArea.scrollHeight
   }
 
   render(){
@@ -39,7 +73,8 @@ export default class App extends React.Component {
     return (
       <section className="c-section">
         <div className="c-box">
-          <Answers answers={this.state.answers} />
+          <Chats chats={this.state.chats}/>
+          <Answers answers={this.state.answers} selectAnswer={this.selectAnswer}/>
         </div>
       </section>
     );
